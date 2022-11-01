@@ -33,11 +33,8 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <rtems.h>
-#include <rtems/rtems_bsdnet.h>
-#include <rtems/rtems_dhcp_failsafe.h>
-#include <bsp.h>
 
-extern int rtems_fxp_attach(struct rtems_bsdnet_ifconfig *config, int attaching);
+#include <bsp.h>
 
 /*
 ** cFE includes
@@ -169,8 +166,10 @@ void CFE_PSP_Main(void)
 
     /*
     ** Set up the virtual FS mapping for the "/cf" directory
+    ** RTEMS path = /nonvol
+    ** cFS path = /cf
     */
-    Status = OS_FileSysAddFixedMap(&fs_id, "/mnt/eeprom", "/cf");
+    Status = OS_FileSysAddFixedMap(&fs_id, "/nonvol", "/cf");
     if (Status != OS_SUCCESS)
     {
         /* Print for informational purposes --

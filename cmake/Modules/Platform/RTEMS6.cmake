@@ -27,8 +27,9 @@ set(CMAKE_SHARED_MODULE_CXX_FLAGS "")
 # Include the system specs directly within the COMPILE_OBJECT definitions
 # This way it does not need to be done via CMAKE_C_FLAGS and it simplifies
 # the process in general.
-set(RTEMS_SYS_SPECS_FLAGS    "-B${RTEMS_TARGET_PATH}/${RTEMS_BSP}/lib -qrtems")
-set(RTEMS_SYS_LINK_LIB_PATH  "-L${RTEMS_TARGET_PATH}/${RTEMS_BSP}/lib")
+# Note that the specs vary between RTEMS 5, RTEMS 6, and the Gaisler RCC version of RTEMS 5
+#  These differences are accounted for in the toolchain file in the RTEMS_BSP_SPECS macro
+set(RTEMS_SYS_SPECS_FLAGS    "-B${RTEMS_TARGET_PATH}/${RTEMS_BSP}/lib ${RTEMS_BSP_SPECS_FLAGS} -qrtems")
 
 # Basic command templates for compiling C and C++ code
 set(CMAKE_C_COMPILE_OBJECT   "<CMAKE_C_COMPILER>   <DEFINES> ${RTEMS_SYS_SPECS_FLAGS} ${RTEMS_BSP_C_FLAGS}   <INCLUDES> <FLAGS> -o <OBJECT> -c <SOURCE>")
@@ -41,6 +42,7 @@ set(CMAKE_CXX_CREATE_SHARED_MODULE ${CMAKE_C_CREATE_SHARED_MODULE})
 set(CMAKE_C_CREATE_SHARED_LIBRARY ${CMAKE_C_CREATE_SHARED_MODULE})
 set(CMAKE_CXX_CREATE_SHARED_LIBRARY ${CMAKE_C_CREATE_SHARED_MODULE})
 set(CMAKE_C_LINK_EXECUTABLE "<CMAKE_LINKER> ${RTEMS_BSP_LINK_FLAGS} <LINK_FLAGS> -o <TARGET> ${CMAKE_SHARED_OBJECT_LINKER_FLAGS} <OBJECTS> <LINK_LIBRARIES>")
+
 
 SET(RTEMS_TARGET_PATH
     "${RTEMS_BSP_PREFIX}/${CMAKE_SYSTEM_PROCESSOR}-rtems${CMAKE_SYSTEM_VERSION}")
